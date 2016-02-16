@@ -4,7 +4,11 @@ services:
   - docker
 
 before_install:
-  - curl -sSL https://raw.githubusercontent.com/citac/citac/master/install/install.sh | sudo bash
+  - curl -sSL https://raw.githubusercontent.com/citac/citac/$TRAVIS_BRANCH/install/install.sh | sudo bash
 
 script:
   - var/test/travis-tests.sh
+
+notifications:
+  email: false
+

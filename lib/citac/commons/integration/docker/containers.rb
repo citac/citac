@@ -51,6 +51,14 @@ module Citac
 
             image_id = get_image_id image
 
+            # disable apparmor profile if necessary
+            if File.exist?('/opt/citac/dont_use_apparmor')
+              options[:apparmor_profile] = false
+              # TODO whu: does not seem to work (-> not necessary here?)
+              #options[:mounts] = [] if !options[:mounts]
+              #options[:mounts] << ['/bin/true', '/opt/citac/dont_use_apparmor', false]
+            end
+
             parameters = ['-i']
             parameters << '--rm' unless options[:keep_container]
             parameters += ['-e', "LANG=#{options[:locale]}"] if options[:locale]
@@ -65,6 +73,7 @@ module Citac
             exec_options[:args] = parameters
 
             result = Citac::Utils::Exec.run 'docker run', exec_options
+
             container_id = IO.read(cidfile).strip
 
             if result.exit_code != 0 && raise_on_failure

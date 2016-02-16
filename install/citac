@@ -15,7 +15,7 @@ fi
 
 APPARMOR_SWITCH=
 if [ ! -d /etc/apparmor.d/ ]; then
-    APPARMOR_SWITCH="-v /bin/true:/opt/citac/dont_use_apparmor"
+    APPARMOR_SWITCH="-v /bin/true:/opt/citac/dont_use_apparmor:ro"
 fi
 
 docker run \

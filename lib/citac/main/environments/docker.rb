@@ -93,13 +93,23 @@ module Citac
         end
 
         env_id = env.respond_to?(:id) ? env.id : env.to_s
-        output = Citac::Integration::Docker.run env_id, "/tmp/citac/#{script_name}",
-                                   :mounts => mounts,
-                                   :locale => locale,
-                                   :output => options[:output],
-                                   :raise_on_failure => options[:raise_on_failure],
-                                   :keep_container => !cleanup_instance,
-                                   :apparmor_profile => 'docker-ptrace' # https://github.com/mconcas/docks#allow-docker-container-to-call-ptrace
+        #puts "ENV: #{ENV.respond_to?(:to_hash) ? ENV.to_hash : ENV}"
+        run_opts = {
+            :mounts => mounts,
+            :locale => locale,
+            :output => options[:output],
+            :raise_on_failure => options[:raise_on_failure],
+            :keep_container => !cleanup_instance,
+            :apparmor_profile => 'docker-ptrace' # https://github.com/mconcas/docks#allow-docker-container-to-call-ptrace
+        }
+
+        # disable apparmor profile if necessary
+        if File.exist?('/opt/citac/dont_use_apparmor')
+          run_opts[:apparmor_profile] = nil
+          mounts << ['/bin/true', '/opt/citac/dont_use_apparmor', false]
+        end
+
+        output = Citac::Integration::Docker.run env_id, "/tmp/citac/#{script_name}", run_opts
 
         FileUtils.chmod '-x', script_path unless executable
 

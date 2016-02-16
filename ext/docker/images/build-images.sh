@@ -17,12 +17,12 @@ do
         echo "Generating test image for $type/$os"...
         rm -f $SCRIPT_DIR/environments_$type/$os/citac.tar.gz
         cp $SCRIPT_DIR/citac.tar.gz $SCRIPT_DIR/environments_$type/$os/citac.tar.gz
-        docker rmi citac/environments_$type:$os >> ${type}_${os}.log
-        docker build -t citac/environments:${type}_${os} $SCRIPT_DIR/environments_$type/$os | tee ${type}_${os}.log && echo "success" || echo "failed"
+        #docker rmi citac/environments_$type:$os >> ${type}_${os}.log
+        (docker build -t citac/environments:${type}_${os} $SCRIPT_DIR/environments_$type/$os | tee ${type}_${os}.log && echo "success") || echo "failed"
     done
 done
 
 echo "Generating main image..."
 
 cp $SCRIPT_DIR/citac.tar.gz $SCRIPT_DIR/main/citac.tar.gz
-docker build -t citac/environments:main $SCRIPT_DIR/main | tee main.log && echo "success" || echo "failed"
+(docker build -t citac/environments:main $SCRIPT_DIR/main | tee main.log && echo "success") || echo "failed"
