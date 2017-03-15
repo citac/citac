@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/citac/citac.png)](https://travis-ci.org/citac/citac)
+
 # Introduction
 
 citac is a tool for automatically testing Puppet manifests for *idempotence* and *convergence*, hence that repeated executions do not change the desired state once reached:
